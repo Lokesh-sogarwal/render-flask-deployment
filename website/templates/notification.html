@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications</title>
+    <link rel="stylesheet" href="static/css/notification.css">
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fff; /* Main background color */
+            color: #333; /* Default text color */
+        }
+
+       
+
+        /* Notifications Page */
+        .notifications-page {
+            padding: 20px;
+            background-color: #fff;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .notifications-page h1 {
+            font-size: 32px;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* Notification List */
+        #notification-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .notification {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+
+        .notification.new {
+            background-color: #fffbec; /* Light yellow-orange background for new notifications */
+            border-color: #f68c1e; /* Orange border for new notifications */
+        }
+
+        .notification-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .notification-link:hover {
+            background-color: #f0f0f0; /* Slightly darken background on hover */
+        }
+
+        .title {
+            font-weight: bold;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .message {
+            font-size: 16px;
+            color: #555;
+            margin: 10px 0;
+        }
+
+        .timestamp {
+            font-size: 14px;
+            color: #888;
+        }
+
+        /* Media Query for Responsiveness */
+        @media (max-width: 768px) {
+            .links {
+                display: none; /* Hide links on small screens */
+            }
+
+            .logo p {
+                font-size: 16px;
+            }
+
+            .signin {
+                display: none; /* Hide sign-in button on small screens */
+            }
+
+            .notifications-page {
+                padding: 10px;
+            }
+
+            .notification {
+                padding: 12px;
+            }
+
+            .notification-link {
+                font-size: 14px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo">
+            <img src="static/assets/logo.png" alt="" width="50px">
+            Maj Door-India
+        </div>
+        <div class="links">
+            <a href="/dashboard">Home</a>
+            <a href="#">Support</a>
+        </div>
+    </nav>
+    
+    <div class="notifications-page">
+        <h1>Notifications</h1>
+        <div id="notification-list">
+            <!-- Notifications will appear here dynamically -->
+            {% for notification in notifications %}
+                <div class="notification {% if notification.status == 'new' %}new{% endif %}">
+                    <a href="/user/statusupdate" class="notification-link">
+                        <div class="title">{{ notification.title }}</div>
+                        <div class="message">{{ notification.message }}</div>
+                        <div class="timestamp">{{ notification.created_at }}</div>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        // Function to check for new bookings and display notifications
+        async function checkForNewBooking() {
+            try {
+                const response = await fetch('/check-new-booking');
+                const data = await response.json();
+
+                if (data.newBooking) {
+                    // If a new booking is found, show the new booking notification
+                    const notificationList = document.getElementById('notification-list');
+                    const newNotification = data.notifications[data.notifications.length - 1];
+
+                    // Create new notification element
+                    const notificationDiv = document.createElement('div');
+                    notificationDiv.classList.add('notification', 'new');
+                    notificationDiv.innerHTML = `
+                        <a href="/booking/${newNotification.booking_id}" class="notification-link">
+                            <div class="title">${newNotification.title}</div>
+                            <div class="message">${newNotification.message}</div>
+                            <div class="timestamp">${newNotification.created_at}</div>
+                        </a>
+                    `;
+                    notificationList.appendChild(notificationDiv);
+                }
+            } catch (error) {
+                console.error('Error checking for new booking:', error);
+            }
+        }
+
+        // Poll every 5 seconds to check for new bookings
+        setInterval(checkForNewBooking, 5000);
+    </script>
+</body>
+</html>

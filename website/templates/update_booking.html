@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Booking Status</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/update_booking.css') }}">
+    <style>
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 30%;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .modal-header {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .modal-footer {
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background-color: orange;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn.cancel {
+            background-color: grey;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Update Booking Status</h1>
+        <p><strong>Booking ID:</strong> {{ booking.booking_id }}</p>
+        <p><strong>Current Status:</strong> {{ booking.booking_status }}</p>
+
+        <!-- Display form -->
+        <form method="POST" id="updateStatusForm">
+            {{ form.hidden_tag() }}  <!-- CSRF token automatically handled here -->
+
+            <label for="booking_status">New Status:</label>
+            {{ form.booking_status(class="form-control", id="booking_status") }}
+
+            <button type="submit" class="btn" id="updateBtn">Update Status</button>
+        </form>
+
+        <a href="{{ url_for('views.dashboard') }}">Return to Dashboard</a>
+    </div>
+
+    <!-- Modal for Confirmation -->
+    <div id="confirmationModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Confirm Status Update</h2>
+            </div>
+            <p>Are you sure you want to update the booking status?</p>
+            <div class="modal-footer">
+                <button class="btn" id="confirmBtn">Yes, Update</button>
+                <button class="btn cancel" id="cancelBtn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get modal and buttons
+        const modal = document.getElementById('confirmationModal');
+        const confirmBtn = document.getElementById('confirmBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const updateStatusForm = document.getElementById('updateStatusForm');
+        const bookingStatusSelect = document.getElementById('booking_status');
+
+        // Function to disable options based on current status
+        function disableOptionsBasedOnStatus(currentStatus) {
+            const options = bookingStatusSelect.options;
+            for (let i = 0; i < options.length; i++) {
+                const option = options[i];
+                // Disable options that are "backward" from the current status
+                if ((currentStatus === "In Progress" && (option.value === "Pending" || option.value === "Visiting"))) {
+                    option.disabled = true;
+                } else if (currentStatus === "Completed" && option.value !== "Completed") {
+                    option.disabled = true;  // Prevent going backwards from "Completed"
+                } else {
+                    option.disabled = false;  // Enable all other options
+                }
+            }
+
+            // Set the current status as the selected option to reflect the current status
+            bookingStatusSelect.value = currentStatus;
+        }
+
+        // Handle form submission
+        updateStatusForm.addEventListener('submit', function(e) {
+            const status = bookingStatusSelect.value;
+            if (!status) {
+                e.preventDefault();
+                alert('Please select a status to update.');
+            } else {
+                e.preventDefault(); // Prevent the form from submitting immediately
+                modal.style.display = "block"; // Show the confirmation modal
+            }
+        });
+
+        // When the user clicks "Yes, Update" button, submit the form
+        confirmBtn.addEventListener('click', function() {
+            updateStatusForm.submit(); // Submit the form
+            modal.style.display = "none"; // Close the modal
+        });
+
+        // When the user clicks "Cancel", close the modal without submitting
+        cancelBtn.addEventListener('click', function() {
+            modal.style.display = "none"; // Close the modal
+        });
+
+        // Close modal if user clicks outside of the modal content
+        window.addEventListener('click', function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        });
+
+        // Call the function to disable options based on current status
+        window.addEventListener('load', function() {
+            const currentStatus = "{{ booking.booking_status }}"; // Current status passed from the backend
+            disableOptionsBasedOnStatus(currentStatus);
+        });
+    </script>
+</body>
+</html>

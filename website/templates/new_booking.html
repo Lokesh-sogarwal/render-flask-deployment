@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Bookings</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/new_bookings.css') }}">
+    <style>
+        /* Global styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+/* Container for the page content */
+.container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+/* Heading styles */
+h1 {
+    text-align: center;
+    color: #333;
+    font-size: 2.5rem;
+}
+
+/* Card container */
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+/* Card styles */
+.card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Card Header */
+.card-header {
+    background-color: #f1f1f1;
+    padding: 15px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.card-header h2 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #333;
+}
+
+/* Card Body */
+.card-body {
+    padding: 15px;
+}
+
+.card-body p {
+    font-size: 1rem;
+    color: #555;
+    margin: 10px 0;
+}
+
+/* Card Footer */
+.card-footer {
+    padding: 15px;
+    text-align: center;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+.card-footer .btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #f57c00;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+
+.card-footer .btn:hover {
+    background-color: #e64a19;
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>New Bookings</h1>
+
+        {% if bookings %}
+            <div class="card-container">
+                {% for booking in bookings %}
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Booking ID: {{ booking.booking_id }}</h2>
+                        </div>
+                        <div class="card-body">
+                            <p><strong>Customer Name:</strong> {{ booking.fullname }}</p>
+                            <p><strong>Status:</strong> {{ booking.booking_status }}</p>
+                            <p><strong>Date:</strong> {{ booking.date_of_booking }}</p>
+                        </div>
+                        <div class="card-footer">
+                            <a href="{{ url_for('views.update_booking_status', booking_id=booking.booking_id) }}" class="btn">Update Status</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>No new bookings found.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

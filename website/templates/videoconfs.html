@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Meetings</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/vidstyle.css') }}">
+</head>
+<body>
+    <div id="root">
+    </div>
+    <div class="back-to-dashboard">
+        <button onclick="goToDashboard()">Back to dashboard</button>
+    </div>
+    <div class="roomid">
+        Room ID: {{ room_id }}
+    </div>
+</body>
+<script src="https://unpkg.com/@zegocloud/zego-uikit-prebuilt/zego-uikit-prebuilt.js"></script>
+<script src="https://unpkg.com/zego-superboard-web@2.15.3/index.js"></script>
+<script>
+    window.onload = function () {
+        const roomID = "{{ room_id }}";
+        const userID = Math.floor(Math.random() * 10000) + "";
+        const userName = "{{ username }}";
+        const appID = 1901305508;
+        const serverSecret = "a5fc52d6ffb616f3876a42fbc015da66";
+        const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(appID, serverSecret, roomID, userID, userName);
+
+        console.log("Generated Token:", kitToken);
+
+        const zp = ZegoUIKitPrebuilt.create(kitToken);
+        zp.joinRoom({
+            container: document.querySelector("#root"),
+            sharedLinks: [{
+                name: 'Personal link',
+                url: window.location.protocol + '//' + window.location.host + window.location.pathname + '?roomID=' + roomID,
+            }],
+            scenario: {
+                mode: ZegoUIKitPrebuilt.VideoConference,
+                config: {
+                    videoResolutionDefault: ZegoUIKitPrebuilt.VideoResolution_720P,
+                }
+            },
+            screenSharingConfig: {
+                resolution: ZegoUIKitPrebuilt.ScreenSharingResolution_720P
+            },
+            onUserAvatarSetter: (userList) => {
+                userList.forEach(user => {
+                    user.setUserAvatar("{{ url_for('static', filename='css/av.png') }}");
+                });
+            },
+            turnOnMicrophoneWhenJoining: false,
+            turnOnCameraWhenJoining: false,
+            showMyCameraToggleButton: true,
+            showMyMicrophoneToggleButton: true,
+            showAudioVideoSettingsButton: true,
+            showScreenSharingButton: true,
+            showTextChat: true,
+            showUserList: true,
+            maxUsers: 60,
+            layout: "Auto",
+            showLayoutButton: false,
+            showWhiteboardButton: true,
+            showTurnOffRemoteCameraButton: true,
+            showTurnOffRemoteMicrophoneButton: true,
+            showRoomTimer: true,
+            showRoomDetailsButton: true,
+            enableUserSearch: true,
+            showPreJoinView: false,
+            showRemoveUserButton: true,
+            showPinButton: true,
+            autoHideFooter : true,
+
+            onUserLeave: (users) => {
+                users.forEach(user => {
+                    if (user.userID === userID) {
+                        leaveMeeting(roomID);
+                    }
+                });
+            }
+        });
+
+        zp.addPlugins({ ZegoSuperBoardManager });
+    }
+
+    function leaveMeeting(roomID) {
+        fetch('/leave_meeting', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': "{{ csrf_token() }}" // Ensure CSRF token is available
+            },
+            body: JSON.stringify({
+                room_id: roomID
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.href = "/dashboard"; // Redirect to the dashboard after leaving the meeting
+            } else {
+                console.error('Error leaving the meeting:', data.message);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    function goToDashboard() {
+        window.location.href = "/leave_meeting";
+    }
+</script>
+</html>

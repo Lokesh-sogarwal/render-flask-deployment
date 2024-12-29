@@ -1,0 +1,73 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box; /* Ensure padding and border are included in element's width and height */
+}
+
+body {
+    background-color: #E6E6FA; /* Soft lavender background */
+    font-family: Arial, sans-serif; /* Clean and modern font */
+}
+
+h1 {
+    text-align: center;
+    color: #6A0572; /* Indigo heading color */
+    padding-top: 40px;
+    font-size: 2.5rem;
+}
+
+.container {
+    width: 100%;
+    display: flex;
+    justify-content: center; /* Center the form */
+    align-items: center;
+    height: 80vh; /* Vertically center the form */
+}
+
+form {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    width: 40%; /* Set form width */
+    background-color:#E6E6FA ; /* White background for form */
+    padding: 20px; /* Padding around form content */
+    height: 50vh;
+    margin-left: 45px;
+}
+
+
+.form-group {
+    margin-bottom: 20px; /* Space between form fields */
+}
+
+.form-group label {
+    font-weight: bold;
+    color: #6A0572; /* Indigo text for labels */
+    display: block;
+    margin-bottom: 8px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #CCC; /* Light grey border for inputs */
+    border-radius: 5px;
+    font-size: 1rem;
+    color: #333; /* Dark text color */
+}
+
+#joinButton {
+    width: 100%;
+    background-color: brown; /* Indigo background */
+    color: white;
+    padding: 12px;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#joinButton:hover {
+    background-color: #9370DB; /* Lighter indigo on hover */
+}

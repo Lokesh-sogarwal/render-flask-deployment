@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book a Service</title>
+  <link rel="stylesheet" href="/static/css/form.css">
+</head>
+
+<body>
+  <div class="photo">
+    <img src="/static/assets/lifting.jpg" alt="" width="100%" height="330vh">
+  </div>
+  <div class="formbold-main-wrapper">
+    <div class="formbold-form-wrapper">
+       <form action="{{ url_for('auth.booking', booking_type='lifting-shifting', user_id=user_id) }}" method="POST">
+        {{ form.hidden_tag() }}  <!-- CSRF token will be automatically inserted here -->
+
+        <div class="formbold-steps">
+          <ul>
+            <li class="formbold-step-menu1 active">
+              <span>1</span>
+              Details
+            </li>
+            <li class="formbold-step-menu2">
+              <span>2</span>
+              Description
+            </li>
+            <li class="formbold-step-menu3">
+              <span>3</span>
+              Confirm
+            </li>
+          </ul>
+        </div>
+
+        <div class="formbold-form-step-1 active">
+          <div class="formbold-input-flex">
+            <div>
+              <label for="firstname" class="formbold-form-label"> First name </label>
+              {{ form.firstname(class="formbold-form-input", placeholder="Andrio") }}
+            </div>
+            <div>
+              <label for="lastname" class="formbold-form-label"> Last name </label>
+              {{ form.lastname(class="formbold-form-input", placeholder="Dolee") }}
+            </div>
+          </div>
+
+          <div class="formbold-input-flex">
+            <div>
+              <label for="dob" class="formbold-form-label"> Date of Booking</label>
+              {{ form.dob(class="formbold-form-input") }}
+            </div>
+            <div>
+              <label for="phone" class="formbold-form-label"> Phone Number</label>
+              {{ form.phone(class="formbold-form-input") }}
+            </div>
+          </div>
+          <div>
+            <label for="address" class="formbold-form-label"> Address </label>
+            {{ form.address(class="formbold-form-input", placeholder="Flat 4, 24 Castle Street, Perth, PH1 3JY") }}
+          </div>
+          <div>
+            <label id="pin" for="pincode" class="formbold-form-label"> Pincode </label>
+            {{ form.pincode(class="formbold-form-input", placeholder="652341") }}
+          </div>
+          <div>
+            <label for="street" class="formbold-form-label"> City </label>
+            {{ form.street(class="formbold-form-input", placeholder="City") }}
+          </div>
+        </div>
+
+        <div class="formbold-form-step-2">
+          <div>
+            <label for="message" class="formbold-form-label"> Description about work </label>
+            {{ form.message(class="formbold-form-input", rows="6", placeholder="Type your message") }}
+          </div>
+        </div>
+
+        <div class="formbold-form-step-3">
+          <div class="formbold-form-confirm">
+            <p>Are You Confirm about this booking?</p>
+            <div>
+              <button class="formbold-confirm-btn active">
+                Yes! I want it.
+              </button>
+
+              <button class="formbold-confirm-btn">
+                No! I don’t want it.
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="formbold-form-btn-wrapper">
+          <button class="formbold-back-btn">Back</button>
+          <button class="formbold-btn">Next Step</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+
+<script src="/static/script/form.js"></script>
+
+</html>

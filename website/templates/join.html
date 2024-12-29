@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join Meeting</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/join.css') }}">
+</head>
+<body>
+    <h1>Join A Meeting</h1>
+    <div class="container">
+        
+        <div class="left">
+            <img width="650px" src="static/assests/join.png" alt="">
+        </div>
+    <form method="POST" action="{{ url_for('views.join_meeting') }}">
+        
+        {{ form.hidden_tag() }}
+        
+        <div class="form-group">
+            <label for="roomID">{{ form.roomID.label }}</label>
+            {{ form.roomID(class_='form-control', id='roomID') }}
+        </div>
+
+        <button id="joinButton" type="submit" class="btn btn-primary">Join Meeting</button>
+    </form>
+    </div>
+</body>
+</html>

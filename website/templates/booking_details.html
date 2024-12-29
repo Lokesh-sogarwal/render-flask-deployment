@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Details</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/booking_details.css') }}">
+</head>
+<body>
+    <div class="booking-container">
+        <h1>Booking Details</h1>
+
+        <!-- Booking Details Display -->
+        {% if booking %}
+        <div class="booking-card">
+            <h2>Booking ID: {{ booking.booking_id }}</h2>
+            <p><strong>Full Name:</strong> {{ booking.fullname }}</p>
+            <p><strong>Booking Type:</strong> {{ booking.booking_type }}</p>
+            <p><strong>Date of Booking:</strong> {{ booking.date_of_booking.strftime('%B %d, %Y') }}</p>
+            <p><strong>Status:</strong> {{ booking.booking_status }}</p>
+            <p><strong>Phone Number:</strong> {{ booking.phone_number }}</p>
+            <p><strong>Email:</strong> {{ booking.email }}</p>
+            <p><strong>Description:</strong> {{ booking.description }}</p>
+            <p><strong>Address:</strong> {{ booking.address }}</p>
+        </div>
+        {% else %}
+            <p>No booking found with the given ID.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

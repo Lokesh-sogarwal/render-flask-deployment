@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create a Meeting</title>
+</head>
+<body>
+    <h1>Zoho Meeting Integration</h1>
+    <form action="/create_meeting" method="POST">
+        <label for="topic">Meeting Topic:</label>
+        <input type="text" id="topic" name="topic" required><br><br>
+
+        <label for="start_time">Start Time:</label>
+        <input type="datetime-local" id="start_time" name="start_time" required><br><br>
+
+        <label for="duration">Duration (minutes):</label>
+        <input type="number" id="duration" name="duration" required><br><br>
+
+        <button type="submit">Create Meeting</button>
+    </form>
+</body>
+</html>
